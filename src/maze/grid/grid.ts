@@ -1,6 +1,14 @@
 import { MazeAlgorithm } from '../algorithms/types';
 import { Cell } from '../cell/cell';
+import { MazeRenderer } from '../renderer/types';
 
+export type GridConstructorOptions = {
+  rows: number;
+  columns: number;
+  algorithm?: MazeAlgorithm;
+  renderer?: MazeRenderer;
+  seed?: number;
+};
 export class Grid {
   private _rows: number;
   private _columns: number;
@@ -8,12 +16,14 @@ export class Grid {
 
   private _seed?: number;
   private _algorithm?: MazeAlgorithm;
+  private _renderer?: MazeRenderer;
 
-  constructor(rows: number, columns: number, algorithm?: MazeAlgorithm, seed?: number) {
-    this._rows = rows;
-    this._columns = columns;
-    this._algorithm = algorithm;
-    this._seed = seed;
+  constructor(options: GridConstructorOptions) {
+    this._rows = options.rows;
+    this._columns = options.columns;
+    this._algorithm = options.algorithm;
+    this._renderer = options.renderer;
+    this._seed = options.seed;
     this.prepareGrid();
     this.configureCells();
   }
@@ -102,5 +112,12 @@ export class Grid {
       console.error('No algorithm set');
     }
     this._algorithm?.generateMaze(this);
+  }
+
+  public render(into: HTMLElement) {
+    if (!this._renderer) {
+      console.error('No renderer set');
+    }
+    this._renderer?.render(into, this);
   }
 }

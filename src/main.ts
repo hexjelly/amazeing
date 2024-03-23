@@ -6,7 +6,11 @@ function init() {
   const defaultRows = 3;
   const defaultColumns = 3;
 
-  const body = document.getElementsByTagName('body')[0];
+  const renderTarget = document.getElementById('render-target');
+  if (!renderTarget) {
+    return;
+  }
+
   const form = document.getElementById('render');
 
   const rowsInput = document.getElementById('rows') as HTMLInputElement;
@@ -15,24 +19,21 @@ function init() {
   columnsInput.value = defaultColumns.toString();
 
   const bt = new BinaryTree();
-  let grid = new Grid(defaultRows, defaultColumns, bt);
+  const renderer = new AsciiRenderer();
+  let grid = new Grid({ rows: defaultRows, columns: defaultColumns, algorithm: bt, renderer });
   grid.generateMaze();
-
-  const maze = new AsciiRenderer(grid);
-
-  maze.render(body);
+  grid.render(renderTarget);
 
   form?.addEventListener('submit', (e) => {
     e.preventDefault();
     const data = new FormData(e.target as HTMLFormElement);
     const rows = Number(data.get('rows'));
     const columns = Number(data.get('columns'));
-    grid = new Grid(rows, columns, bt);
+    renderTarget.removeChild(renderTarget.lastChild as Node);
+    grid = new Grid({ rows, columns, algorithm: bt, renderer });
     grid.generateMaze();
-    const maze = new AsciiRenderer(grid);
 
-    body.removeChild(body.lastChild as Node);
-    maze.render(body);
+    grid.render(renderTarget);
   });
 }
 

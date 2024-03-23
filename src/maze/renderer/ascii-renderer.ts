@@ -2,16 +2,10 @@ import { Grid } from '../grid/grid';
 import { MazeRenderer } from './types';
 
 export class AsciiRenderer implements MazeRenderer {
-  private _maze: Grid;
-
-  constructor(maze: Grid) {
-    this._maze = maze;
-  }
-
-  public render(into: HTMLElement) {
+  public render(into: HTMLElement, grid: Grid) {
     const pre = document.createElement('pre');
-    let ascii = `+${'---+'.repeat(this._maze.columns)}\n`;
-    this._maze.forEachRow((row) => {
+    let ascii = `+${'---+'.repeat(grid.columns)}\n`;
+    grid.forEachRow((row) => {
       let top = '|';
       let bottom = '+';
       row.forEach((cell) => {
