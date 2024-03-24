@@ -8,7 +8,8 @@ export class Cell {
     this._neighbors = { north: null, east: null, south: null, west: null };
   }
 
-  public link(cell: Cell, bidi = true) {
+  public link(cell: Cell | null, bidi = true) {
+    if (!cell) return;
     this.links.set(cell, true);
 
     if (bidi) {

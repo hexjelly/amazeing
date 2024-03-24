@@ -1,10 +1,16 @@
 import { BinaryTree } from './maze/algorithms/binary-tree/binary-tree';
+import { Sidewinder } from './maze/algorithms/sidewinder/sidewinder';
+import { MazeAlgorithm } from './maze/algorithms/types';
 import { Grid } from './maze/grid/grid';
 import { Maze } from './maze/maze';
 import { AsciiRenderer } from './maze/renderer/ascii-renderer';
 
 const RENDER_OPTIONS = [{ name: 'ASCII', value: 'ascii', renderer: AsciiRenderer }];
-const ALGORITHM_OPTIONS = [{ name: 'Binary Tree', value: 'binary-tree', algorithm: BinaryTree }];
+type AlgorithmOption = { name: string; value: string; algorithm: MazeAlgorithm };
+const ALGORITHM_OPTIONS: AlgorithmOption[] = [
+  { name: 'Binary Tree', value: 'binary-tree', algorithm: new BinaryTree() },
+  { name: 'Sidewinder', value: 'sidewinder', algorithm: new Sidewinder() },
+];
 
 function init() {
   const defaultRows = 3;
@@ -50,11 +56,19 @@ function init() {
   form?.addEventListener('submit', (e) => {
     e.preventDefault();
     const data = new FormData(e.target as HTMLFormElement);
+
     const rows = Number(data.get('rows'));
     const columns = Number(data.get('columns'));
-    renderTarget.removeChild(renderTarget.lastChild as Node);
     maze.grid.rows = rows;
     maze.grid.columns = columns;
+
+    const algorithm = ALGORITHM_OPTIONS.find((option) => option.value === data.get('algorithm'))!.algorithm;
+    maze.setAlgorithm(algorithm);
+
+    const Renderer = RENDER_OPTIONS.find((option) => option.value === data.get('renderer'))!.renderer;
+    maze.setRenderer(new Renderer(renderTarget));
+    renderTarget.removeChild(renderTarget.lastChild as Node);
+
     maze.generate();
     maze.render();
   });
