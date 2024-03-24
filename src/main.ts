@@ -4,22 +4,29 @@ import { MazeAlgorithm } from './maze/algorithms/types';
 import { Grid } from './maze/grid/grid';
 import { Maze } from './maze/maze';
 import { AsciiRenderer } from './maze/renderer/ascii-renderer';
+import { SVGRenderer } from './maze/renderer/svg-renderer';
+import { MazeRenderer } from './maze/renderer/types';
 
-const RENDER_OPTIONS = [{ name: 'ASCII', value: 'ascii', renderer: AsciiRenderer }];
 type AlgorithmOption = { name: string; value: string; algorithm: MazeAlgorithm };
-const ALGORITHM_OPTIONS: AlgorithmOption[] = [
-  { name: 'Binary Tree', value: 'binary-tree', algorithm: new BinaryTree() },
-  { name: 'Sidewinder', value: 'sidewinder', algorithm: new Sidewinder() },
-];
+type RendererOption = { name: string; value: string; renderer: MazeRenderer };
 
 function init() {
-  const defaultRows = 3;
-  const defaultColumns = 3;
+  const defaultRows = 5;
+  const defaultColumns = 5;
 
   const renderTarget = document.getElementById('render-target');
   if (!renderTarget) {
     return;
   }
+
+  const RENDER_OPTIONS: RendererOption[] = [
+    { name: 'SVG', value: 'svg', renderer: new SVGRenderer(renderTarget, 50) },
+    { name: 'ASCII', value: 'ascii', renderer: new AsciiRenderer(renderTarget) },
+  ];
+  const ALGORITHM_OPTIONS: AlgorithmOption[] = [
+    { name: 'Binary Tree', value: 'binary-tree', algorithm: new BinaryTree() },
+    { name: 'Sidewinder', value: 'sidewinder', algorithm: new Sidewinder() },
+  ];
 
   const form = document.getElementById('render');
   const rowsInput = document.getElementById('rows') as HTMLInputElement;
@@ -45,8 +52,8 @@ function init() {
     renderSelect?.appendChild(el);
   }
 
-  const algorithm = new BinaryTree();
-  const renderer = new AsciiRenderer(renderTarget);
+  const algorithm = ALGORITHM_OPTIONS[0].algorithm;
+  const renderer = RENDER_OPTIONS[0].renderer;
   const grid = new Grid({ rows: defaultRows, columns: defaultColumns });
   const maze = new Maze({ grid, renderer, algorithm });
 
@@ -65,9 +72,8 @@ function init() {
     const algorithm = ALGORITHM_OPTIONS.find((option) => option.value === data.get('algorithm'))!.algorithm;
     maze.setAlgorithm(algorithm);
 
-    const Renderer = RENDER_OPTIONS.find((option) => option.value === data.get('renderer'))!.renderer;
-    maze.setRenderer(new Renderer(renderTarget));
-    renderTarget.removeChild(renderTarget.lastChild as Node);
+    const renderer = RENDER_OPTIONS.find((option) => option.value === data.get('renderer'))!.renderer;
+    maze.setRenderer(renderer);
 
     maze.generate();
     maze.render();

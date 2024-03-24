@@ -8,6 +8,9 @@ export class AsciiRenderer implements MazeRenderer {
   }
 
   public render(grid: Grid) {
+    if (this._container.firstChild) {
+      this._container.removeChild(this._container.firstChild);
+    }
     const pre = document.createElement('pre');
     let ascii = `+${'---+'.repeat(grid.columns)}\n`;
     grid.forEachRow((row) => {
