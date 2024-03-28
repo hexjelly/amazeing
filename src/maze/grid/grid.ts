@@ -1,25 +1,18 @@
-import { MazeAlgorithm } from '../algorithms/types';
 import { Cell } from '../cell/cell';
-import { MazeRenderer } from '../renderer/types';
 
 export type GridConstructorOptions = {
   rows: number;
   columns: number;
-  seed?: number;
 };
+
 export class Grid {
   private _rows: number;
   private _columns: number;
   private _grid: Cell[][] = [];
 
-  private _seed?: number;
-  private _algorithm?: MazeAlgorithm;
-  private _renderer?: MazeRenderer;
-
   constructor(options: GridConstructorOptions) {
     this._rows = options.rows;
     this._columns = options.columns;
-    this._seed = options.seed;
     this.prepareGrid();
     this.configureCells();
   }
@@ -78,18 +71,6 @@ export class Grid {
   public set columns(columns: number) {
     this._columns = columns;
     this.reset();
-  }
-
-  public get seed() {
-    return this._seed;
-  }
-
-  public set seed(seed: number | undefined) {
-    this._seed = seed;
-  }
-
-  public set algorithm(algorithm: MazeAlgorithm | undefined) {
-    this._algorithm = algorithm;
   }
 
   public getRandomCell() {

@@ -7,7 +7,7 @@ describe('Grid', () => {
       { rows: 3, columns: 3, size: 9 },
       { rows: 12, columns: 10, size: 120 },
     ])('$rows x $columns = $size', ({ rows, columns, size }) => {
-      const grid = new Grid(rows, columns);
+      const grid = new Grid({ rows, columns });
 
       expect(grid.size).toBe(size);
     });
@@ -15,7 +15,7 @@ describe('Grid', () => {
 
   describe('.getCell', () => {
     it('should return null for out of bounds cells', () => {
-      const grid = new Grid(3, 3);
+      const grid = new Grid({ rows: 3, columns: 3 });
 
       expect(grid.getCell(-1, 0)).toBeNull();
       expect(grid.getCell(0, -1)).toBeNull();
@@ -24,7 +24,7 @@ describe('Grid', () => {
     });
 
     it('should return the cell at the specified coordinates', () => {
-      const grid = new Grid(3, 3);
+      const grid = new Grid({ rows: 3, columns: 3 });
       const cell = grid.getCell(1, 1);
 
       expect(cell!.coordinate).toEqual({ row: 1, col: 1 });
@@ -33,7 +33,7 @@ describe('Grid', () => {
 
   describe('.rows', () => {
     it('should return number of rows', () => {
-      const grid = new Grid(3, 3);
+      const grid = new Grid({ rows: 3, columns: 3 });
 
       expect(grid.rows).toBe(3);
     });
@@ -41,7 +41,7 @@ describe('Grid', () => {
 
   describe('.columns', () => {
     it('should return number of columns', () => {
-      const grid = new Grid(3, 3);
+      const grid = new Grid({ rows: 3, columns: 3 });
 
       expect(grid.columns).toBe(3);
     });
@@ -49,7 +49,7 @@ describe('Grid', () => {
 
   describe('.eachRow', () => {
     it('should iterate over each row', () => {
-      const grid = new Grid(3, 3);
+      const grid = new Grid({ rows: 3, columns: 3 });
       const result: Set<string> = new Set();
 
       grid.forEachRow((row) => {
@@ -66,7 +66,7 @@ describe('Grid', () => {
 
   describe('.forEachCell', () => {
     it('should iterate over each cell', () => {
-      const grid = new Grid(3, 3);
+      const grid = new Grid({ rows: 3, columns: 3 });
       const result: Set<string> = new Set();
       grid.forEachCell((cell) => {
         result.add(`${cell.coordinate.row}-${cell.coordinate.col}`);
