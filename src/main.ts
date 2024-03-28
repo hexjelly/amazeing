@@ -24,8 +24,8 @@ function init() {
     { name: 'ASCII', value: 'ascii', renderer: new AsciiRenderer(renderTarget) },
   ];
   const ALGORITHM_OPTIONS: AlgorithmOption[] = [
-    { name: 'Binary Tree', value: 'binary-tree', algorithm: new BinaryTree() },
-    { name: 'Sidewinder', value: 'sidewinder', algorithm: new Sidewinder() },
+    { name: 'Binary Tree', value: 'binary-tree', algorithm: new BinaryTree({ seed: '123' }) },
+    { name: 'Sidewinder', value: 'sidewinder', algorithm: new Sidewinder({ seed: '123' }) },
   ];
 
   const form = document.getElementById('render');
